@@ -71,7 +71,7 @@ func (m *ElasticSearchManager) DeleteIndex(index string) {
 		log.Infof("跳过删除索引操作")
 		return
 	}
-	res, err := m.Client.CloseIndex(index).Do(context.Background())
+	res, err := m.Client.DeleteIndex(index).Do(context.Background())
 	if err != nil {
 		log.Error(err)
 	}

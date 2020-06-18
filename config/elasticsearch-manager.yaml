@@ -11,4 +11,4 @@ delete-policy:
       Regex: .*[0-9]{4}(.|-)[0-1][0-9](.|-)[0-3][0-9]$
     exclude:
       keys:
-      regex:
+      regex: ^\..*

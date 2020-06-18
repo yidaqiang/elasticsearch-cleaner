@@ -42,11 +42,6 @@ func (d *DeleteRule) NeedDeleteOrClose(index Index) RuleResult {
 			log.Infof("创建日期在 %d-%d 天内，关闭索引 %s", d.CloseIntervalDay, d.DeleteIntervalDay, index.Name)
 			return Close
 		}
-	case indexDuration >= time.Hour*24*90:
-		{
-			log.Infof("创建日期超过 90 天，强制删除索引 %s", index.Name)
-			return Delete
-		}
 	default:
 		{
 			log.Infof("创建日期超过 %d 天，校验是否删除索引 %s", d.DeleteIntervalDay, index.Name)
@@ -56,6 +51,11 @@ func (d *DeleteRule) NeedDeleteOrClose(index Index) RuleResult {
 
 	if ruleCheck(&d.Indices.Exclude, index.Name) {
 		log.Infof("符合排除条件，保留索引 %s", index.Name)
+		return Save
+	}
+	// 排除不需要删除的索引再删除超过90天
+	if indexDuration >= 90*time.Hour*24 {
+		log.Infof("创建日期超过 90 天，强制删除索引 %s", index.Name)
 		return Save
 	}
 	if ruleCheck(&d.Indices.Include, index.Name) {
