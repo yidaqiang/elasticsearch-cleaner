@@ -1,0 +1,14 @@
+server: http://127.0.0.1:9200
+username:
+password:
+dry-run: true
+delete-policy:
+  delete-interval-day: 30
+  close-interval-day: 15
+  indices:
+    include:
+      keys:
+      Regex: .*[0-9]{4}(.|-)[0-1][0-9](.|-)[0-3][0-9]$
+    exclude:
+      keys:
+      regex:
