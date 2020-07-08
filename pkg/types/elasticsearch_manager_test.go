@@ -10,3 +10,9 @@ func TestElasticSearchManager_DeleteIndex(t *testing.T) {
 	manager := ElasticSearchManager{Client: client}
 	manager.DeleteIndex("test-bulk-example")
 }
+
+func TestElasticSearchManager_DeleteDocs(t *testing.T) {
+	client, _ := elastic.NewClient(elastic.SetURL("http://192.168.72.41:30200"), elastic.SetSniff(false))
+	manager := ElasticSearchManager{Client: client}
+	manager.DeleteDocs("mysql", 1)
+}

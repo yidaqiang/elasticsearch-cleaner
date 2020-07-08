@@ -105,7 +105,7 @@ func (m *ElasticSearchManager) DeleteDocs(index string, t time.Duration) {
 	}
 	q := elastic.NewRangeQuery("@timestamp").Lte(time.Now().UTC().Add(-time.Hour * 24 * t))
 
-	res, err := m.Client.DeleteByQuery(index).Query(q).Do(context.Background())
+	res, err := m.Client.DeleteByQuery(index).Query(q).WaitForCompletion(false).Do(context.Background())
 	if err != nil {
 		log.Error(err)
 	}
