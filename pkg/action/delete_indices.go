@@ -19,7 +19,7 @@ func RunDeleteIndices(manager *yitypes.ElasticSearchManager) {
 			}
 		case yitypes.Save:
 			{
-				// Do noting
+				manager.DeleteDocs(index.Name, manager.DeleteRule.DeleteIntervalDay)
 				break
 			}
 		case yitypes.Close:

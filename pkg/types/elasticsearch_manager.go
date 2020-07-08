@@ -68,7 +68,7 @@ func (m *ElasticSearchManager) Indices() (result Indices) {
 
 func (m *ElasticSearchManager) DeleteIndex(index string) {
 	if m.DryRun {
-		log.Infof("跳过删除索引操作")
+		log.Infof("跳过删除索引操作 %s", index)
 		return
 	}
 	res, err := m.Client.DeleteIndex(index).Do(context.Background())
@@ -84,7 +84,7 @@ func (m *ElasticSearchManager) DeleteIndex(index string) {
 
 func (m *ElasticSearchManager) CloseIndex(index string) {
 	if m.DryRun {
-		log.Infof("跳过关闭索引操作")
+		log.Infof("跳过关闭索引操作 %s", index)
 		return
 	}
 	res, err := m.Client.CloseIndex(index).Do(context.Background())
@@ -96,6 +96,20 @@ func (m *ElasticSearchManager) CloseIndex(index string) {
 	} else {
 		log.Infof("关闭索引 %s失败", index)
 	}
+}
+
+func (m *ElasticSearchManager) DeleteDocs(index string, t time.Duration) {
+	if m.DryRun {
+		log.Infof("跳过删除索引过期文档 %s", index)
+		return
+	}
+	q := elastic.NewRangeQuery("@timestamp").Lte(time.Now().UTC().Add(-time.Hour * 24 * t))
+
+	res, err := m.Client.DeleteByQuery(index).Query(q).Do(context.Background())
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("索引 %s 删除的文档数 %d/%d", index, res.Deleted, res.Total)
 }
 
 // 通过关键字生成正则表达式
